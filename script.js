@@ -6,7 +6,7 @@ const ary_skin =
     "dehydrated_oily_skin", 
     "sensitive_skin",
     "acne-prone_skin"
-]
+];
 
 const ary_trouble =
 [
@@ -19,79 +19,89 @@ const ary_trouble =
 ];
 
 
+let message = null,skin_index = [],trouble_index = [];
 
-const ary_component =
-[
-    ["히알루론산", "세라마이드", "글리세린"],
-    ["판테놀","히알루론산", "알란토인", "스쿠알란"],
-    ["살리실산", "나이아신 아마이드", "티트리 오일", "레티놀"],
-    ["판테놀","히알루론산", "알란토인", "스쿠알란"],
-    ["알란토인", "티트리 오일"],
-    ["살리실산", "레티놀", "티트리 오일", "과산화 벤조일"]
-];
+//class="radio_skin"인 radio 버튼을 선택
+const radio_skin = document.querySelectorAll('.radio_skin');
 
-const ary_message = [
-    "건성은 ph가 높은 알칼리성 피부입니다.\n이 때 건성 피부는 대부분 민감하므로, 세안 단계에서 밀크타입의 클렌저를 사용하는 것이 좋습니다!",
-    "복합성은 ph가 높은 부분과 낮은 부분이 섞여 있는 피부입니다.\n그러므로 유수분 밸런스 조절에 좋은 판테놀, 알란토인 같은 성분이 들어간 화장품을 사용하는 것이 좋습니다!",
-    "지성은 ph가 낮은 산성 피부입니다. \n이 때 지성 피부는 대부분 유분과 각질이 많이 나오므로 aha,bha같은 성분이 들어간 화장품을 사용하는 것이 좋습니다!",
-    "수부지 피부는 겉은 유분기가 있고, 속은 건조하여 ph가 높은 알칼리성 피부입니다.\n이 때는 속건조를 해결할 수 있는 히알루론산이 함유된 화장품을 사용하는 것이 좋습니다!",
-    "민감성은 ph가 매우 높은 알칼리성 피부입니다.\n이 때 민감성 피부는 대부분 민감하므로, 티트리 오일이 함유된 화장품을 사용하는 것이 좋습니다!",
-    "트러블성 피부는 ph가 매우 낮은 산성 피부입니다!\n이 때는 피부 진정에 탁월한 티트리 오일이 함유된 제품을 쓰는 것이 좋습니다!"
-];
-
-
-let message = "";
-let skin_index = 0;
-let component_index = 0;
-let skin_type = "";
-
-// class = "radio_skin"인 모든 radio가져오기
-const radio_skin = document.querySelectorAll('input[class ="radio_skin"]');
-
-// 피부 타입 가져오기
-radio_skin.forEach((radio) => {
-        radio.addEventListener('change', (event) => {
-        // 선택된 값 가져오기
-        const skin_type_temp = event.target.value;
-        for(let i = 0; i < 6; i++)
+// 각 radio_skin 버튼에 change 이벤트 리스너를 추가합니다.
+radio_skin.forEach(radio => {
+  radio.addEventListener('change', () => {
+    // 선택된 radio 버튼의 value 값을 가져옵니다.
+    const selectedValue = radio.value;
+    for(let i = 0; i<6; i++)
+    {
+        if(selectedValue == ary_skin[i])
         {
-            if(skin_type_temp == ary_skin[i])
-            {
-                skin_index = i;
-                skin_type = ary_skin[i];
-            }
+            skin_index.push(i+1);
         }
+    }
   });
 });
 
-// class = "radio_skin"인 모든 radio가져오기
-const radio_trouble = document.querySelectorAll('input[class ="radio_trouble"]');
+// 모든 class="radio_trouble"인 radio 버튼을 선택합니다.
+const radio_trouble = document.querySelectorAll('.radio_trouble');
 
-// 피부 타입 가져오기
-radio_trouble.forEach((radio) => {
-        radio.addEventListener('change', (event) => {
-        // 선택된 값 가져오기
-        const trouble_type = event.target.value;
-        for(let i = 0; i < 6; i++)
+// 각 radio 버튼에 change 이벤트 리스너를 추가합니다.
+radio_trouble.forEach(radio => {
+  radio.addEventListener('change', () => {
+    // 선택된 radio 버튼의 value 값을 가져옵니다.
+    const selectedValue = radio.value;
+    for(let i = 0; i<6; i++)
+    {
+        if(selectedValue == ary_trouble[i])
         {
-            if(trouble_type_type == ary_trouble[i])
-            {
-                trouble_index = i;
-            }
+            trouble_index.push(i+1);
         }
+    }
   });
 });
 
 
-const input_ph = document.getElementById("input_ph");
-let ph;
+ 
+  
 
-
-
-function get_ph()
+function print_res()
 {
-    ph = input_ph.value();
-    print_res(ph);
+    const a = (comb_ph*50-(Math.pow(10,-1*water_ph) * 49));
+    const res = -1*Math.log10(a);
+    let message = "ph = " + String(Math.round(res)) + "\n피부 타입 : ";
+    for(let i =0; i< skin_index.length; i++)
+    {
+      message += skin_index[i] + '번 ';
+    }
+    message += "\n트러블 : "
+    for(let i = 0; i< trouble_index.length; i++)
+    {
+      message += trouble_index[i]+'번 ';
+    }
+
+    alert(message);
+}
+
+const input_comb_ph = document.getElementById("input_comb_ph");
+const input_water_ph = document.getElementById("input_water_ph");
+let comb_ph = null, water_ph = null, volume = null;
+
+function get_comb_ph()
+{
+    comb_ph = input_comb_ph.value;
+    if( !(water_ph == null))
+    {
+      print_res();
+    }
 };
 
-input_ph.addEventListener("onchange", get_ph);
+input_comb_ph.addEventListener("change", get_comb_ph);
+
+function get_water_ph()
+{
+    water_ph = input_water_ph.value;
+    if(!(comb_ph == null))
+    {
+      print_res();
+    }
+};
+
+input_comb_ph.addEventListener("change", get_water_ph);
+
